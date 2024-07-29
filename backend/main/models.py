@@ -1,9 +1,16 @@
 from django.db import models
 
 
+class CurrentCategory(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(category=self.model)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     url = models.SlugField(unique=True, max_length=100)
+    objects = models.Manager()
+    movies = CurrentCategory()
 
     def __str__(self):
         return self.name
