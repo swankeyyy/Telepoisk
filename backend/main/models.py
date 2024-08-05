@@ -1,9 +1,6 @@
 from django.db import models
 
 
-
-
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
     url = models.SlugField(unique=True, max_length=100)
@@ -65,4 +62,3 @@ class Movie(models.Model):
     class Meta:
         verbose_name = 'Картина'
         verbose_name_plural = 'Картины'
-
