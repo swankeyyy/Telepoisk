@@ -14,14 +14,14 @@ class User(AbstractUser):
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites", null=True, blank=True)
-    movie = models.ManyToManyField(Movie, blank=True)
+    movie = models.ManyToManyField(Movie, blank=True, related_name="favorites")
 
     class Meta:
         verbose_name = 'Избранное'
 
 class Aborted(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aborted", null=True, blank=True)
-    movie = models.ManyToManyField(Movie, blank=True)
+    movie = models.ManyToManyField(Movie, blank=True, related_name="aborted")
 
     class Meta:
         verbose_name = 'Не предлагать'

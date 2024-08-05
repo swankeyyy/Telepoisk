@@ -11,3 +11,6 @@ def _get_or_create_user_from_tg(request):
         username = first_name + last_name
     User.objects.get_or_create(telegram_id=telegram_id,
                                username=username, first_name=first_name, last_name=last_name)
+
+
+

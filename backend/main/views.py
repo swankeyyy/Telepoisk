@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from users.models import User
 from .models import Category, Movie, Genre
 from .serializers import *
 from .utils import _list_by_genre, _list_by_category
@@ -42,3 +44,15 @@ class MovieDetailView(APIView):
 
         except Movie.DoesNotExist as e:
             return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+class RandomMovieView(APIView):
+
+    def get(self, request):
+        telegram_id = request.GET.get('telegram_id')
+        user = User.objects.get(telegram_id=telegram_id)
+        movie = Movie.objects.exclude(favorites__user=user) & Movie.objects.exclude(aborted__user=user)
+        random_movie = movie.order_by('?').first()
+        serializer = MovieTgSerializer(random_movie)
+
+        print(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
