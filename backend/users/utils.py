@@ -7,5 +7,7 @@ def _get_or_create_user_from_tg(request):
     username = request.POST.get('username')
     first_name = request.POST.get('first_name')
     last_name = request.POST.get('last_name')
+    if not username:
+        username = first_name + last_name
     User.objects.get_or_create(telegram_id=telegram_id,
                                username=username, first_name=first_name, last_name=last_name)
