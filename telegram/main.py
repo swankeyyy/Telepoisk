@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import requests
 
-from telegram.utils import _get_user_data, _get_header_from_response, _get_photo_from_response
+from telegram.utils import _get_user_data, _get_header_from_response, _get_photo_from_response, _get_id_for_bookmarks
 
 # token and backend_url settings
 token = '7442563954:AAHhLc8rh1R07rw3dIoHPF9uNfVRVREarQU'
@@ -52,15 +52,13 @@ def get_movie(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'add_to_favorite')
 def add_to_favorite(call):
-    user_id = call.from_user.id
-    movie_id = d[user_id]
-    data = {
-        'telegram_id': user_id,
-        'movie_id': movie_id,
-    }
+    """get user_id and movie_id from dict 'd' and send to backend"""
     try:
-        response = requests.post(backend_url + 'add_to_favorite/', data)
-        bot.send_message(call.message.chat.id, 'Добалено в избранное', reply_markup=movie_offer)
+        data = _get_id_for_bookmarks(call, d, 'aborted')
+
+        response = requests.post(backend_url + 'add_to_list/', data)
+        if response.status_code == 200:
+            bot.send_message(call.message.chat.id, 'Добалено в избранное', reply_markup=movie_offer)
     except Exception as e:
         print(e)
         bot.send_message(call.message.chat.id, 'Что-то пошло не так(')
@@ -69,7 +67,16 @@ def add_to_favorite(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'add_to_aborted')
 def add_to_aborted(call):
-    pass
+    """get user_id and movie_id from dict 'd' and send to backend"""
+    try:
+        data = _get_id_for_bookmarks(call, d, 'aborted')
+
+        response = requests.post(backend_url + 'add_to_list/', data)
+        if response.status_code == 200:
+            bot.send_message(call.message.chat.id, 'Удалено из списка', reply_markup=movie_offer)
+    except Exception as e:
+        print(e)
+        bot.send_message(call.message.chat.id, 'Что-то пошло не так(')
 
 
 @bot.message_handler(commands=['start'])

@@ -5,5 +5,5 @@ from . import views
 
 urlpatterns = [
     path("register/", views.RegistrationView.as_view(),name="register"),
-    path('add_to_favorite/', views.AddToFavoritesView.as_view(), name="add_to_favorite"),
+    path('add_to_list/', views.AddToFavoritesView.as_view(), name="add_to_favorite"),
 ]

@@ -36,3 +36,13 @@ def _get_photo_from_response(response):
     img_file.close()
     p = open(f'images/{photo_name}', 'rb')
     return p
+
+def _get_id_for_bookmarks(call, d, type):
+    user_id = call.from_user.id
+    movie_id = d[user_id]
+    data = {
+        'telegram_id': user_id,
+        'movie_id': movie_id,
+        'list_type': type
+    }
+    return data
