@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'rest_framework',
-    'users.apps.UsersConfig',
     "corsheaders",
 ]
 
@@ -126,6 +125,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "users.User"
+# AUTH_USER_MODEL = "users_management.UserManage"
+
+AUTH_USER_MODEL = "main.User"
 
 CORS_ALLOW_ALL_ORIGINS = True

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
 class Category(models.Model):
@@ -25,14 +26,7 @@ class Genre(models.Model):
         verbose_name_plural = 'Жанры'
 
 
-class Raiting(models.Model):
-    value = models.SmallIntegerField()
 
-    def __str__(self):
-        return self.value
-
-    class Meta:
-        verbose_name = 'Рейтинг'
 
 
 class IsActive(models.Manager):
@@ -49,8 +43,7 @@ class Movie(models.Model):
     year = models.SmallIntegerField(default=1980)
     description = models.TextField(default='Описание скоро будет')
     poster = models.FileField(upload_to='posters/', blank=True, null=True)
-    raiting = models.ForeignKey(to=Raiting, on_delete=models.SET_NULL, related_name='movies',
-                                blank=True, null=True)
+    raiting = models.DecimalField(max_digits=2, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
 
     objects = models.Manager()
@@ -62,3 +55,30 @@ class Movie(models.Model):
     class Meta:
         verbose_name = 'Картина'
         verbose_name_plural = 'Картины'
+
+
+# custom user models
+class User(AbstractUser):
+    telegram_id = models.CharField(max_length=255, unique=True, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites", null=True, blank=True)
+    movie = models.ManyToManyField(Movie, blank=True, related_name="favorites")
+
+    class Meta:
+        verbose_name = 'Избранное'
+
+
+class Aborted(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aborted", null=True, blank=True)
+    movie = models.ManyToManyField(Movie, blank=True, related_name="aborted")
+
+
+
+    class Meta:
+        verbose_name = 'Не предлагать'

@@ -16,10 +16,16 @@ btn = types.InlineKeyboardButton(text='Подобрать случайный ф�
 movie_offer.add(btn)
 
 # buttons for favorites and aborted list
-user_movie_list = types.InlineKeyboardMarkup(row_width=2)
-btn2 = types.InlineKeyboardButton(text='Смотреть позже', callback_data='add_to_favorite')
-btn3 = types.InlineKeyboardButton(text='Уже смотрел', callback_data='add_to_aborted')
-user_movie_list.add(btn2, btn3)
+user_movie_list = types.InlineKeyboardMarkup(row_width=3)
+btn2 = types.InlineKeyboardButton(text='Позже', callback_data='add_to_favorite')
+btn3 = types.InlineKeyboardButton(text='Неинтересно', callback_data='add_to_aborted')
+btn4 = types.InlineKeyboardButton(text='Закладки', callback_data='get_favorites')
+user_movie_list.add(btn2, btn3, btn4)
+
+#button for users favorite
+favorite_list = types.InlineKeyboardMarkup()
+btn4 = types.InlineKeyboardButton(text='Посмотреть свои закладки', callback_data='get_favorites')
+favorite_list.add(btn4)
 
 #temporary data for user
 d = {}
@@ -36,7 +42,7 @@ def get_movie(call):
     movie_id = response.json().get('id', None)
     if movie_id:
         #set a temp info about user id and movie id for favorite and ignor
-        d.setdefault(user_id, movie_id)
+        d[user_id] = movie_id
 
         header = _get_header_from_response(response)
         bot.send_message(call.message.chat.id, header, parse_mode='HTML')
@@ -44,21 +50,22 @@ def get_movie(call):
         bot.send_photo(call.message.chat.id, photo, parse_mode='HTML')
         description = response.json()['description']
         bot.send_message(call.message.chat.id, description, reply_markup=movie_offer)
-        bot.send_message(call.message.chat.id, '<i>Либо такой вариант</i>\n',
+        bot.send_message(call.message.chat.id, '<i>Выберите действие</i>\n',
                          reply_markup=user_movie_list, parse_mode='HTML')
+
     else:
-        bot.send_message(call.message.chat.id, 'Пока нет новых поступлений(')
+        bot.send_message(call.message.chat.id, 'Пока нет новых поступлений(', reply_markup=favorite_list)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'add_to_favorite')
 def add_to_favorite(call):
     """get user_id and movie_id from dict 'd' and send to backend"""
     try:
-        data = _get_id_for_bookmarks(call, d, 'aborted')
+        data = _get_id_for_bookmarks(call, d, 'favorites')
 
         response = requests.post(backend_url + 'add_to_list/', data)
         if response.status_code == 200:
-            bot.send_message(call.message.chat.id, 'Добалено в избранное', reply_markup=movie_offer)
+            bot.send_message(call.message.chat.id, 'Добавлено в избранное', reply_markup=movie_offer)
     except Exception as e:
         print(e)
         bot.send_message(call.message.chat.id, 'Что-то пошло не так(')
@@ -73,10 +80,28 @@ def add_to_aborted(call):
 
         response = requests.post(backend_url + 'add_to_list/', data)
         if response.status_code == 200:
-            bot.send_message(call.message.chat.id, 'Удалено из списка', reply_markup=movie_offer)
+            bot.send_message(call.message.chat.id, 'Понятно, больше не попадется', reply_markup=movie_offer)
     except Exception as e:
         print(e)
-        bot.send_message(call.message.chat.id, 'Что-то пошло не так(')
+        bot.send_message(call.message.chat.id, 'Что-то пошло не так(', reply_markup=movie_offer)
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'get_favorites')
+def get_favorites(call):
+    data = {
+        'telegram_id': call.from_user.id,
+    }
+    response = requests.get(backend_url + 'get_favorites/', data)
+    mes = 'Список закладок пока пуст'
+    if response.status_code == 200:
+        mes = ''
+        for item in response.json():
+            mes += f'-----{item['name']}  - {item['year']}\n'
+
+    bot.send_message(call.message.chat.id, mes, reply_markup=movie_offer)
+
+
+
 
 
 @bot.message_handler(commands=['start'])
@@ -94,7 +119,7 @@ def start(message):
 
     except Exception as e:
         print(e)
-        bot.send_message(message.chat.id, 'Что-то пошло не так( попробуйте позже!')
+        bot.send_message(message.chat.id, 'Что-то пошло не так( попробуйте позже!', reply_markup=movie_offer)
 
 
 bot.polling(none_stop=True)

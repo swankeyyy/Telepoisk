@@ -2,10 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.AllMoviesView.as_view(), name='all_movies_view'),
-    path('categories', views.AllCategoriesView.as_view(), name='all_categories_view'),
-    path('genres/<slug:genre_url>', views.AllMoviesView.as_view(), name='by_genres_view'),
-    path('categories/<slug:category_url>', views.AllMoviesView.as_view(), name='by_categories_view'),
-    path('movie/<slug:movie_url>', views.MovieDetailView.as_view(), name='movie_view'),
     path('random_movie/', views.RandomMovieView.as_view(), name='random_movie_view'),
+    path("register/", views.RegistrationView.as_view(), name="register"),
+    path('add_to_list/', views.AddToFavoritesView.as_view(), name="add_to_favorite"),
+    path('get_favorites/', views.GetFavoriteMoviesView.as_view(), name="get_favorites"),
 ]
