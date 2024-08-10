@@ -1,17 +1,15 @@
-from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import User, Favorite, Aborted
 from .serializers import *
-from django.conf import settings
 from .utils import _get_or_create_user_from_tg
 
 
-user_model = settings.AUTH_USER_MODEL
+
 
 class RandomMovieView(APIView):
-
+    """Get random movie that not in favorites or ignore list of current user"""
     def get(self, request):
         telegram_id = request.GET.get('telegram_id')
         user = User.objects.get(telegram_id=telegram_id)

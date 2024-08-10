@@ -21,4 +21,4 @@ class MovieTgSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('name', 'year', 'genre', 'category', 'description', 'poster', 'id')
+        fields = ('name', 'year', 'genre', 'category', 'description', 'poster', 'id', 'raiting')

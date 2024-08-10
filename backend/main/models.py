@@ -26,25 +26,22 @@ class Genre(models.Model):
         verbose_name_plural = 'Жанры'
 
 
-
-
-
 class IsActive(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
 
 
 class Movie(models.Model):
-    name = models.CharField(max_length=100)
-    url = models.SlugField(unique=True, max_length=100)
+    name = models.CharField(max_length=100, verbose_name='Название')
+    url = models.SlugField(unique=True, max_length=100, verbose_name='Slug')
     genre = models.ManyToManyField(to=Genre, verbose_name="Жанр", related_name='movies')
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, related_name='movies',
                                  verbose_name='Категория')
-    year = models.SmallIntegerField(default=1980)
-    description = models.TextField(default='Описание скоро будет')
-    poster = models.FileField(upload_to='posters/', blank=True, null=True)
-    raiting = models.DecimalField(max_digits=2, decimal_places=2, default=0)
-    is_active = models.BooleanField(default=True)
+    year = models.SmallIntegerField(default=1980, verbose_name='Год выпуска')
+    description = models.TextField(default='Описание скоро будет', verbose_name='Описание')
+    poster = models.FileField(upload_to='posters/', blank=True, null=True, verbose_name='Постер')
+    raiting = models.FloatField(default=7, verbose_name='Рейтинг кинопоиска')
+    is_active = models.BooleanField(default=True, verbose_name='Опубликовать')
 
     objects = models.Manager()
     active = IsActive()
@@ -72,13 +69,13 @@ class Favorite(models.Model):
 
     class Meta:
         verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
 
 
 class Aborted(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aborted", null=True, blank=True)
     movie = models.ManyToManyField(Movie, blank=True, related_name="aborted")
 
-
-
     class Meta:
         verbose_name = 'Не предлагать'
+        verbose_name_plural = 'Не предлагать'

@@ -22,20 +22,25 @@ def _get_header_from_response(response):
 
     header = (
         f"<i>Название:</i> <b>{content['name']}</b>\n<i>Год выпуска:</i> <b>{str(content['year'])}</b>\n<i>Жанр:</> "
-        f"<b>{content['genre'][0]}</b>")
+        f"<b>{content['genre'][0]}</b>\n<i>Рейтинг Кинопоиска:</i> <b>{str(content['raiting'])}</b>")
     return header
 
 
 def _get_photo_from_response(response):
     """get url photo, save photo and send it for user"""
-    photo = media_backend_url + response.json()['poster'][1:]
-    img = requests.get(photo)
-    photo_name = response.json()['name']
-    img_file = open(f'images/{photo_name}', 'wb')
-    img_file.write(img.content)
-    img_file.close()
-    p = open(f'images/{photo_name}', 'rb')
-    return p
+    poster = response.json().get('poster', None)
+
+    if poster:
+        photo = media_backend_url + poster[1:]
+        img = requests.get(photo)
+        photo_name = response.json()['name']
+        img_file = open(f'images/{photo_name}', 'wb')
+        img_file.write(img.content)
+        img_file.close()
+        p = open(f'images/{photo_name}', 'rb')
+        return p
+    return False
+
 
 def _get_id_for_bookmarks(call, d, type):
     user_id = call.from_user.id

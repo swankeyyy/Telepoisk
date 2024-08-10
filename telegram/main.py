@@ -19,7 +19,7 @@ movie_offer.add(btn)
 user_movie_list = types.InlineKeyboardMarkup(row_width=3)
 btn2 = types.InlineKeyboardButton(text='Позже', callback_data='add_to_favorite')
 btn3 = types.InlineKeyboardButton(text='Неинтересно', callback_data='add_to_aborted')
-btn4 = types.InlineKeyboardButton(text='Закладки', callback_data='get_favorites')
+btn4 = types.InlineKeyboardButton(text='В закладки', callback_data='get_favorites')
 user_movie_list.add(btn2, btn3, btn4)
 
 #button for users favorite
@@ -47,7 +47,9 @@ def get_movie(call):
         header = _get_header_from_response(response)
         bot.send_message(call.message.chat.id, header, parse_mode='HTML')
         photo = _get_photo_from_response(response)
-        bot.send_photo(call.message.chat.id, photo, parse_mode='HTML')
+        if photo:
+            bot.send_photo(call.message.chat.id, photo, parse_mode='HTML')
+
         description = response.json()['description']
         bot.send_message(call.message.chat.id, description, reply_markup=movie_offer)
         bot.send_message(call.message.chat.id, '<i>Выберите действие</i>\n',
