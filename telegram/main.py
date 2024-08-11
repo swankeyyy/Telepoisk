@@ -5,7 +5,7 @@ import requests
 from telegram.utils import _get_user_data, _get_header_from_response, _get_photo_from_response, _get_id_for_bookmarks
 
 # token and backend_url settings
-token = '7442563954:AAHhLc8rh1R07rw3dIoHPF9uNfVRVREarQU'
+token = '7442563954:AAHhLc8rh1R07rw3dIoHPF9uNfVRVREarQUuIo'
 bot = telebot.TeleBot(token)
 backend_url = 'http://127.0.0.1:8000/api/'
 media_backend_url = 'http://127.0.0.1:8000/'
