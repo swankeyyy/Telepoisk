@@ -1,8 +1,7 @@
 import telebot
 from telebot import types
 import requests
-
-from telegram.utils import _get_user_data, _get_header_from_response, _get_photo_from_response, _get_id_for_bookmarks
+from utils import _get_user_data, _get_header_from_response, _get_photo_from_response, _get_id_for_bookmarks
 
 # token and backend_url settings
 token = '7442563954:AAHhLc8rh1R07rw3dIoHPF9uNfVRVREarQUuIo'
@@ -16,10 +15,10 @@ btn = types.InlineKeyboardButton(text='Подобрать случайный ф�
 movie_offer.add(btn)
 
 # buttons for favorites and aborted list
-user_movie_list = types.InlineKeyboardMarkup(row_width=3)
-btn2 = types.InlineKeyboardButton(text='Позже', callback_data='add_to_favorite')
+user_movie_list = types.InlineKeyboardMarkup(row_width=2)
+btn2 = types.InlineKeyboardButton(text='Добавить в закладки', callback_data='add_to_favorite')
 btn3 = types.InlineKeyboardButton(text='Неинтересно', callback_data='add_to_aborted')
-btn4 = types.InlineKeyboardButton(text='В закладки', callback_data='get_favorites')
+btn4 = types.InlineKeyboardButton(text='Закладки', callback_data='get_favorites')
 user_movie_list.add(btn2, btn3, btn4)
 
 #button for users favorite
@@ -124,4 +123,4 @@ def start(message):
         bot.send_message(message.chat.id, 'Что-то пошло не так( попробуйте позже!', reply_markup=movie_offer)
 
 
-bot.polling(none_stop=True)
+bot.infinity_polling()
