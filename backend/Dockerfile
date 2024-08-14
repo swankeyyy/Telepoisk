@@ -1,8 +1,9 @@
 FROM python:3.10.9
 
-WORKDIR /app
+WORKDIR usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
     && apt-get install netcat -y
@@ -16,7 +17,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 RUN chmod +x entrypoint.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 
 
 
