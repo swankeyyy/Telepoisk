@@ -1,13 +1,16 @@
 import telebot
+import os
 from telebot import types
 import requests
 from utils import _get_user_data, _get_header_from_response, _get_photo_from_response, _get_id_for_bookmarks
 
 # token and backend_url settings
-token = '7442563954:AAHhLc8rh1R07rw3dIoHPF9uNfVRVREarQU'
+token = os.environ.get('TOKEN')
 bot = telebot.TeleBot(token)
-backend_url = 'http://127.0.0.1:8000/api/'
-media_backend_url = 'http://127.0.0.1:8000/'
+
+#url settings
+backend_url = os.environ.get('URL')
+media_backend_url = os.environ.get('MEDIA_URL')
 
 # buttons for start page
 movie_offer = types.InlineKeyboardMarkup()
@@ -97,7 +100,7 @@ def get_favorites(call):
     if response.status_code == 200:
         mes = ''
         for item in response.json():
-            mes += f'-----{item['name']}  - {item['year']}\n'
+            mes += f"-----{item['name']}  - {item['year']}\n"
 
     bot.send_message(call.message.chat.id, mes, reply_markup=movie_offer)
 

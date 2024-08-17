@@ -68,3 +68,5 @@ class GetFavoriteMoviesView(APIView):
         if response:
             return Response(status=status.HTTP_200_OK, data=response)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+

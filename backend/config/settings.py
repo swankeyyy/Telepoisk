@@ -12,7 +12,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', default=0)))
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -146,4 +147,6 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
     'http://localhost:8081',
     'http://127.0.0.1:8000',
+    'https://api.telegram.org'
 ]
+# CORS_ALLOW_ALL_ORIGINS=True
