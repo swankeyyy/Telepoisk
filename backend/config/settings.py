@@ -104,7 +104,7 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:1313",
     "http://164.90.190.249",
     'http://localhost:80',
-    ''
+
 ]
 
 CSRF_TRUSTED_ORIGINS = [
