@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Category(models.Model):
+    """Category of movies like serials, films, etc."""
     name = models.CharField(max_length=100)
     url = models.SlugField(unique=True, max_length=100)
 
@@ -15,6 +16,7 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
+    """Genres like actions, drama, triller, etc."""
     name = models.CharField(max_length=100)
     url = models.SlugField(unique=True, max_length=100)
 
@@ -32,6 +34,7 @@ class IsActive(models.Manager):
 
 
 class Movie(models.Model):
+    """Single movie model"""
     name = models.CharField(max_length=100, verbose_name='Название')
     url = models.SlugField(unique=True, max_length=100, verbose_name='Slug')
     genre = models.ManyToManyField(to=Genre, verbose_name="Жанр", related_name='movies')
@@ -56,6 +59,7 @@ class Movie(models.Model):
 
 # custom user models
 class User(AbstractUser):
+    """Single user model with telegram id"""
     telegram_id = models.CharField(max_length=255, unique=True, null=True, blank=True)
 
     class Meta:
@@ -64,6 +68,7 @@ class User(AbstractUser):
 
 
 class Favorite(models.Model):
+    """User favorites movies list"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites", null=True, blank=True)
     movie = models.ManyToManyField(Movie, blank=True, related_name="favorites")
 
@@ -73,6 +78,7 @@ class Favorite(models.Model):
 
 
 class Aborted(models.Model):
+    """User Ignore list"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aborted", null=True, blank=True)
     movie = models.ManyToManyField(Movie, blank=True, related_name="aborted")
 

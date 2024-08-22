@@ -16,6 +16,7 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MovieTgSerializer(serializers.ModelSerializer):
+    """Special Serializer only for movie"""
     genre = serializers.SlugRelatedField(many=True, read_only=True, slug_field='name')
     category = serializers.SlugRelatedField(read_only=True, slug_field='name')
 
