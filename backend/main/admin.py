@@ -6,12 +6,14 @@ from django.utils.safestring import mark_safe
 
 
 class FavoritesInline(admin.TabularInline):
+    """Inline in AdminPanel for favorite movies for current user"""
     model = Favorite
     extra = 5
     readonly_fields = ("movie",)
 
 
 class AbortedsInline(admin.TabularInline):
+    """Inline in AdminPanel for ignore movies for current user"""
     model = Aborted
     extra = 5
     readonly_fields = ("movie",)
@@ -19,6 +21,7 @@ class AbortedsInline(admin.TabularInline):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    """Admin for User model"""
     list_display = ('id', 'username', 'telegram_id')
     list_display_links = ('id', 'username', 'telegram_id')
     inlines = [FavoritesInline, AbortedsInline]

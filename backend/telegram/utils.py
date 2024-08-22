@@ -1,6 +1,7 @@
+import os
 import requests
 
-media_backend_url = 'http://127.0.0.1:8000/'
+media_backend_url = os.environ.get('MEDIA_URL')
 
 
 def _get_user_data(message):
