@@ -1,0 +1,8 @@
+/venv/
+/telegram/
+/backend/old.yml
+/backend/entrypoint.sh
+/backend/Dockerfile
+/backend/docker-compose-old.yml
+/backend/.env.dev
+
